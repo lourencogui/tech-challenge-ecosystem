@@ -1,6 +1,9 @@
 # environment variables
 .env*
 
+# database
+db.sqlite
+
 # compiled output
 /dist
 /node_modules
