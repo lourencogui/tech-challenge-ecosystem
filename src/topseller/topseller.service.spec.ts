@@ -112,14 +112,10 @@ describe('TopSellerService', () => {
           useValue: {
             get: jest.fn(() => {
               return {
-                pipe: () => {
-                  return {
-                    toPromise: () => {
-                      return Promise.resolve({
-                        data: data
-                      });
-                    }
-                  }
+                toPromise: () => {
+                  return Promise.resolve({
+                    data: data
+                  });
                 }
               }
             })

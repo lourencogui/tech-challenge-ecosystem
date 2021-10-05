@@ -19,7 +19,7 @@ export class AppService {
       client_secret: process.env.CLIENT_SECRET,
       grant_type: 'authorization_code',
       code: access_code
-    }).pipe(take(1)).toPromise();
+    }).toPromise();
 
     const token = data.access_token;
     const user_id = data.user_id;

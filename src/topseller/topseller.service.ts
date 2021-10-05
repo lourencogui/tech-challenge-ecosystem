@@ -71,7 +71,7 @@ export class TopSellerService {
         const { data } = await this.httpService.get(
             `${process.env.API_ENDPOINT}/${user_id}/orders?fields=${fields.join(',')}`, {
             headers: headers
-        }).pipe(take(1)).toPromise();
+        }).toPromise();
 
         return data;
     }
@@ -119,12 +119,8 @@ export class TopSellerService {
             }
         });
         const topSeller = Object.entries(soldProducts).sort(([,a], [,b]) => b-a)[0];
-        topSellerProduct = products.find((product) => product.product_id === parseInt(topSeller[0]));
-        topSellerProduct = {
-            product_id: topSellerProduct.product_id,
-            name: topSellerProduct.name,
-            price: topSellerProduct.price
-        }
+        const test = products.find((product) => product.product_id === parseInt(topSeller[0]));
+        topSellerProduct = new Product(test);
 
         return { topSellerProduct, numberOfSales: topSeller[1] };
     }
