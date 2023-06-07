@@ -1,0 +1,52 @@
+name: "create-github-release"
+
+on: workflow_dispatch
+
+jobs:
+  read-tag-from-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read package.json
+        id: readpackage
+        uses: rexdefuror/read-package-json@v1.0.5
+      - name: Save tag on env
+        uses: actions/checkout@v2
+        id: savetag
+        env: 
+          tag: v${{ env.PACKAGE_VERSION }}
+  
+  create-tag:
+    runs-on: ubuntu-latest
+    needs: read-tag-from-package
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Create tag
+        uses: negz/create-tag@v1
+        with:
+          version: ${{ env.tag }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  create-release:
+    runs-on: ubuntu-latest
+    needs: create-tag
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: Show return
+        id: showreturn
+        run: |
+          echo "Tag: ${{ env.tag }}"
+      - name: Create Release
+        id: createrelease
+        uses: ncipollo/release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          draft: false
+          generateReleaseNotes: true
+          makeLatest: true
+          prerelease: false
+          tag: ${{ env.tag }}
