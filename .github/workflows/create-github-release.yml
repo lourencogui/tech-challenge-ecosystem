@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
         id: savetag
         env: 
-          tag: v${{ env.PACKAGE_VERSION }}
+          tag: "v${{ env.PACKAGE_VERSION }}"
 
       - name: Show tag
         id: showtag
