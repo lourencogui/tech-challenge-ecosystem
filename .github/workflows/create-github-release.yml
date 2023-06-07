@@ -6,6 +6,9 @@ jobs:
   read-tag-from-package:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
       - name: Read package.json
         id: readpackage
         uses: rexdefuror/read-package-json@v1.0.5
