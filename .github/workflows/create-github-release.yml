@@ -1,28 +1,21 @@
 name: "create-github-release"
 
-on: workflow_dispatch
+on: workflow_dispatch 
 
 jobs:
   read-tag-from-package:
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.savetag.outputs.tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
       - name: Read package.json
         id: readpackage
         uses: rexdefuror/read-package-json@v1.0.5
       - name: Save tag on env
-        uses: actions/checkout@v2
         id: savetag
-        env: 
-          tag: "v${{ env.PACKAGE_VERSION }}"
-
-      - name: Show tag
-        id: showtag
-        run: |
-          echo "Package version: ${{ env.PACKAGE_VERSION }}"
-          echo "Tag: ${{ env.tag }}"
+        run: echo "tag=v${{ env.PACKAGE_VERSION }}" >> "$GITHUB_OUTPUT"
   
   create-tag:
     runs-on: ubuntu-latest
@@ -34,12 +27,12 @@ jobs:
       - name: Show tag
         id: showtag
         run: |
-          echo "Tag: ${{ env.tag }}"
+          echo "Tag: ${{ needs.read-tag-from-package.outputs.tag }}"
 
       - name: Create tag
         uses: negz/create-tag@v1
         with:
-          version: ${{ env.tag }}
+          version: ${{ needs.read-tag-from-package.outputs.tag }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
   create-release:
@@ -52,7 +45,7 @@ jobs:
       - name: Show return
         id: showreturn
         run: |
-          echo "Tag: ${{ env.tag }}"
+          echo "Tag: ${{ needs.read-tag-from-package.outputs.tag }}"
       - name: Create Release
         id: createrelease
         uses: ncipollo/release-action@v1
@@ -63,4 +56,4 @@ jobs:
           generateReleaseNotes: true
           makeLatest: true
           prerelease: false
-          tag: ${{ env.tag }}
+          tag: ${{ needs.read-tag-from-package.outputs.tag }}
