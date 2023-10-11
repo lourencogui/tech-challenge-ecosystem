@@ -1,7 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { take } from 'rxjs';
 import { Repository } from 'typeorm';
 import { AppEntity } from './entities/app.entity';
 
