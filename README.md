@@ -8,7 +8,7 @@ O desafio consiste em implementar novas **API's** para trabalhar com as transaç
 
 1. Um endpoint para processar transações e pagamentos de um determinado merchant (vendedor)
 
-- Uma transação deve conter pelo menos:
+- Uma transação possui as informações a seguir:
 
   - O valor total da transação, formatado em string decimal
   - Descrição da transação, por exemplo "T-Shirt Black M"
