@@ -21,7 +21,15 @@ O desafio consiste em implementar novas **API's** para trabalhar com as transaç
 
   Exemplo de transação:
 
-  ```json
+| Campo                | Valor           |
+|----------------------|-----------------|
+| Merchant Id          | 2441            |
+| Description          | T-Shirt Black/M |
+| Payment Method       | Credit_Card     |
+| Card Number          | 4338            |
+| Card Holder          | John Smith      |
+| Card Expiration Date | 12/2028         |
+| Card CVV             | 123             |
   {
     "value": "340.30",
     "description": "T-Shirt Black/M",
