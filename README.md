@@ -50,7 +50,7 @@ O desafio consiste em implementar novas **API's** para trabalhar com as transaç
   - Ao criar payables, devemos descontar uma taxa de processamento (chamada de `fee`). Considere **2%** para transações **debit_card**
     e **4%** para transações **credit_card**. Exemplo: Quando um payable é criado no valor de R$ 100,00 a partir de uma transação **credit_card** ele receberá R$ 96,00.
 
-    Exemplo de payable
+    Exemplo de payable:
 
     ```json
     {
