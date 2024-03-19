@@ -10,7 +10,7 @@ O desafio consiste em implementar novas **API's** para trabalhar com as transaç
 
 - Uma transação possui as informações a seguir:
 
-  - O valor total da transação, formatado em string decimal
+  - O valor total da transação
   - Descrição da transação, por exemplo "T-Shirt Black M"
   - Método de pagamento: **debit_card** ou **credit_card**
   - O número do cartão (devemos armazenar e retornar somente os últimos 4 dígitos do cartão, por ser uma informação sensível)
