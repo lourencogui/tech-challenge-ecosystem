@@ -60,7 +60,14 @@ O desafio consiste em implementar novas **API's** para trabalhar com as transaç
 
     Exemplo de payable:
 
-    ```json
+| Campo        | Valor      |
+|--------------|------------|
+| Merchant Id  | 2343       |
+| Status       | paid       |
+| Create Date  | 08/12/2023 |
+| Subtotal     | 200        |
+| Discount     | 4          |
+| Total        | 196        |
     {
       "id": "1",
       "status": "paid",
