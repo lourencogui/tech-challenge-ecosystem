@@ -22,7 +22,7 @@ O desafio consiste em implementar novas **API's** para trabalhar com as transaç
   Exemplo de transação:
 
 | Campo                | Valor           |
-|----------------------|-----------------|
+| -------------------- | --------------- |
 | Merchant Id          | 2441            |
 | Description          | T-Shirt Black/M |
 | Payment Method       | Credit_Card     |
@@ -30,18 +30,6 @@ O desafio consiste em implementar novas **API's** para trabalhar com as transaç
 | Card Holder          | John Smith      |
 | Card Expiration Date | 12/2028         |
 | Card CVV             | 123             |
-  {
-    "value": "340.30",
-    "description": "T-Shirt Black/M",
-    "method": "credit_card",
-    "cardNumber": "3486",
-    "cardHolderName": "Fonsi Julian",
-    "cardExpirationDate": "04/28",
-    "cardCvv": "290",
-    "id": "KiV2szQ",
-    "merchantId": 2441
-  }
-  ```
 
 - Ao criar uma transação, também deve ser criado um recebível do merchant (payables), com as seguintes regras de negócio:
 
@@ -60,24 +48,14 @@ O desafio consiste em implementar novas **API's** para trabalhar com as transaç
 
     Exemplo de payable:
 
-| Campo        | Valor      |
-|--------------|------------|
-| Merchant Id  | 2343       |
-| Status       | paid       |
-| Create Date  | 08/12/2023 |
-| Subtotal     | 200        |
-| Discount     | 4          |
-| Total        | 196        |
-    {
-      "id": "1",
-      "status": "paid",
-      "create_date": "15/03/2020",
-      "subtotal": "200",
-      "discount": "4",
-      "total": "196",
-      "merchantId": 2441
-    }
-    ```
+| Campo       | Valor      |
+| ----------- | ---------- |
+| Merchant Id | 2343       |
+| Status      | paid       |
+| Create Date | 08/12/2023 |
+| Subtotal    | 200        |
+| Discount    | 4          |
+| Total       | 196        |
 
 2. Um endpoint que calcule o total de Recebíveis (payables) do merchant num período de datas informado, a resposta deve conter:
 
