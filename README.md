@@ -1,73 +1,94 @@
 # PT-BR 🇧🇷
-# Tech Challenge Ecosystem
-O desafio consiste em implementar um **APP** para criação de produtos numa loja.
 
-O app consiste de uma api, que deve salvar os produtos num banco relacional, e sincronizar a criação do produto nas lojas onde o app está instalado.
+# Tech Challenge
 
-O app deve sincronizar a criação simultaneamente nas lojas criadas na [nuvemshop](https://www.nuvemshop.com.br/) quanto nas lojas criadas na [shopify](https://www.shopify.com/br)
+O desafio consiste em implementar novas **API's** para trabalhar com as transações de nossos merchants (vendedores).
 
-* [Documentação](https://tiendanube.github.io/api-documentation/resources/product) da api de produtos nuvemshop
-* [Documentação](https://shopify.dev/docs/api/admin-rest/2023-10/resources/product) da api de produtos da shopify.
+## Nós precisamos que você implemente:
 
-## Descrição do serviço
+1. Um endpoint para processar transações e pagamentos de um determinado merchant (vendedor)
 
-Crie um serviço que receba as informações de produtos e sincronize com as lojas nas 2 plataformas. O serviço deve prover uma abstração entre as 2 plataformas. 
+- Uma transação possui as informações a seguir:
 
-O serviço deve prover um endpoint rest para criação do produto, com suas variantes (cor, tamanho, etc).
+  - O valor total da transação
+  - Descrição da transação, por exemplo "T-Shirt Black M"
+  - Método de pagamento: **debit_card** ou **credit_card**
+  - O número do cartão (devemos armazenar e retornar somente os últimos 4 dígitos do cartão, por ser uma informação sensível)
+  - O nome do dono do cartão
+  - Data de Expiração
+  - CVV do cartão
+  - O id do merchant (vendedor)
 
-O serviço deve persistir as informações num banco relacional (sugerimos mysql)
+  Exemplo de transação:
 
-Se a criação do produto em uma das plataformas falhar, toda a criação do produto deve falhar. Ou seja, a criação do produto deve ser uma operação atômica entra os 3 sistemas.
+| Campo                | Valor           |
+| -------------------- | --------------- |
+| Merchant Id          | 2441            |
+| Description          | T-Shirt Black/M |
+| Payment Method       | Credit_Card     |
+| Card Number          | 4338            |
+| Card Holder          | John Smith      |
+| Card Expiration Date | 12/2028         |
+| Card CVV             | 123             |
 
-Abaixo temos um diagrama explicando o fluxo geral, você não precisa seguir esse fluxo ao pé da letra:
+- Ao criar uma transação, também deve ser criado um recebível do merchant (payables), com as seguintes regras de negócio:
 
-![Diagrama de sequencia](docs/sequence.techchallengeecosystem.png)
+  - Transação **Debit card**:
 
-Como falado, você não precisa seguir exatamente esse fluxo, contanto que o serviço garanta a atomicidade da operação.
+    - O payable deve ser criado com **status = paid**, indicando que o merchant irá receber o valor
+    - O payable deve ser criado com a data igual a data de criação (D + 0).
 
-## Propriedades da Entidade de Produto
-![Diagrama da entidade produto](docs/data.png)
+  - Transação **Credit card**:
 
-### Exemplo
-![exemplo da entidade produto](docs/example.png)
+    - O payable deve ser criado com **status = waiting_funds**, indicando que o merchant irá receber esse valor no futuro
+    - O Payable deve ser criado com a data igual a data de criação da transação + 30 dias (D + 30)
 
+  - Ao criar payables, devemos descontar uma taxa de processamento (chamada de `fee`). Considere **2%** para transações **debit_card**
+    e **4%** para transações **credit_card**. Exemplo: Quando um payable é criado no valor de R$ 100,00 a partir de uma transação **credit_card** ele receberá R$ 96,00.
 
-## Autênticação
-Antes de realizar chamadas nas apis das plataformas, é necessario primeiro realizar uma autenticação 
+    Exemplo de payable:
 
-* [Documentação](https://tiendanube.github.io/api-documentation/authentication) de Autênticação da Api nuvemshop
-* [Documentação](https://shopify.dev/docs/api/admin-rest#authentication) de Autênticação da Api shopify
+| Campo       | Valor      |
+| ----------- | ---------- |
+| Merchant Id | 2343       |
+| Status      | paid       |
+| Create Date | 08/12/2023 |
+| Subtotal    | 200        |
+| Discount    | 4          |
+| Total       | 196        |
 
-Para fins de agilidade nesse desafio, vamos prover chaves de acesso já configuradas nas 2 plataformas.
+2. Um endpoint que calcule o total de Recebíveis (payables) do merchant num período de datas informado, a resposta deve conter:
 
-**Nuvemshop**
+- Valor total de recebíveis pagos
+- Total cobrado de taxa nos recebíveis pagos
+- Valor a receber para o futuro
+
+## Pré-requisitos
+
+Você pode utilizar qualquer linguagem de programação (recomendamos que utilize a que você possui maior familiaridade), frameworks e biblioteca
+
+Para a execução do projeto, é necessário configurar um banco de dados, de preferência relacional, para armazenar os dados(transactions e payables). Recomenda-se utilizar Docker para facilitar o gerenciamento do ambiente de desenvolvimento.
+
+### Configuração do Banco de Dados
+
+O banco de dados deve ser iniciado utilizando o seguinte comando:
+
+```bash
+docker compose up
 ```
-ClientId = 32112
-ClientSecret = 42341312
-```
-**Shopify**
-```
-ClientId = 32112
-ClientSecret = 42341312
-```
 
+## Critérios de avaliação
 
-## Orientações finais
-* Esse desafio deve ser feito em typescript, preferencialmente em [NestJS](https://nestjs.com/) ou [ExpresJS](https://expressjs.com/).
-* O Código deve ser feito em inglês.
-* Você pode utilizar qualquer lib que ache interessante, desde que justifique o porquê.
-* Deixe claro como você testaria a sua solução, e se possível, crie pelo menos 1 teste.
+- Assertividade: A aplicação está fazendo o que é esperado? Se algo estiver faltando, o README explica o motivo?
+- Legibilidade do código (incluindo comentários)
+- Segurança: Existem vulnerabilidades claras?
+- Cobertura de testes (Não esperamos cobertura completa)
+- Histórico de commits (estrutura e qualidade)
+- Escolhas técnicas: A escolha de bibliotecas, banco de dados, arquitetura, etc., é a melhor escolha para a aplicação?
+- Escalabilidade: A aplicação é capaz de lidar com um aumento significativo do tráfego?
+- Manutenibilidade: O código é fácil de manter e modificar?
+- Resiliência: A aplicação é resiliente a falhas e erros inesperados?
 
----
+## Como entregar
 
-<p style="color:red; font-weight: bold;  font-size: 21px; text-align:center"> **** Atenção ****</p>
-
-Entendemos que o tempo é curto para finalizar todo o desafio, esse **não** é o foco desse desafio.
-O foco desse desafio é entender como você trabalha num ambiente nebuloso:
-* Como você resolveria os problemas propostos?
-* Como você organiza sua soluçao?
-* Quais trade-offs você analisou?
-* Quais dúvidas você teve?
-* Como você explicou a sua solução?
-
----
+- Fork esse desafio no seu repositório pessoal. Crie uma branch para desenvolver sua implementação e, assim que finalizar, submeta um pull request na branch main desse repo, marcando @ewma18, @AndreAffonso e @rafaelito91 como reviewers
