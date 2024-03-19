@@ -64,7 +64,7 @@ O desafio consiste em implementar novas **API's** para trabalhar com as transaç
     }
     ```
 
-2. Um endpoint que calcule o total de Recebíveis (payables) do merchant por período, a resposta deve conter:
+2. Um endpoint que calcule o total de Recebíveis (payables) do merchant num período de datas informado, a resposta deve conter:
 
 - Valor total de recebíveis pagos
 - Total cobrado de taxa nos recebíveis pagos
