@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { PayablesService } from './payables.service';
 import { Payable } from './payable.entity';
 
@@ -16,9 +16,13 @@ export class PayablesController {
 	}
 
 	@Get(':merchantId')
-	async getPayablesByMerchantId(@Param('merchantId') merchantId): Promise<object> {
-		
-		const payables = await this.payableService.sumByMerchantId(merchantId);
+	async getPayablesByMerchantId(
+		@Param('merchantId') merchantId: number,
+		@Query('minDate') minDate: Date,
+		@Query('maxDate') maxDate: Date,
+	): Promise<object> {
+
+		const payables = await this.payableService.sumByMerchantId(merchantId, minDate, maxDate);
 		const totals = payables.reduce((acc, payable) => {
 			const totalReceived = payable.status === 'paid' ? (payable.total + acc.totalReceived) : acc.totalReceived;
 			const taxes = payable.status === 'paid' ? (payable.discount + acc.taxes) : acc.taxes;
@@ -37,5 +41,5 @@ export class PayablesController {
 
 		return totals;
 	}
-	
+
 }

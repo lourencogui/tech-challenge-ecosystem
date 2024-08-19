@@ -19,13 +19,17 @@ export class TransactionsService {
 	}
 
 	async create(transaction: Transaction): Promise<Transaction> {
-		const payableToCreate = this.generatePayable(transaction);
-		
-		const createPayablePromise = this.payableRepository.save(payableToCreate);
-		const createTransactionPromise = this.transactionsRepository.save(transaction);
+		try {
+			const payableToCreate = this.generatePayable(transaction);
 
-		const [createdTransaction, _] = await Promise.all([createTransactionPromise, createPayablePromise]);
-		return createdTransaction;
+			const createTransactionPromise = this.transactionsRepository.save(transaction);
+			const createPayablePromise = this.payableRepository.save(payableToCreate);
+
+			const [createdTransaction, _] = await Promise.all([createTransactionPromise, createPayablePromise]);
+			return createdTransaction;
+		} catch (error) {
+			throw new Error('Error creating transaction');
+		}
 	}
 
 	private generatePayable(transaction: Transaction): Payable {
@@ -40,13 +44,13 @@ export class TransactionsService {
 		if (isDebitTransaction) {
 			payable.status = 'paid';
 			payable.dueDate = new Date();
-			
+
 			const fee = 2;
 			const discount = (fee * payable.subTotal) / 100;
 			const newValue = payable.subTotal - discount;
 
 			payable.discount = discount;
-			payable.total =  newValue;
+			payable.total = newValue;
 		} else {
 			payable.status = 'waiting_funds';
 
@@ -54,13 +58,13 @@ export class TransactionsService {
 			const thirtyDaysAhead = new Date(now.setDate(now.getDate() + 30));
 			payable.dueDate = thirtyDaysAhead;
 			payable.status = 'waiting_funds';
-	
+
 			const fee = 4;
 			const discount = (fee * payable.subTotal) / 100;
 			const newValue = payable.subTotal - discount;
 
 			payable.discount = discount;
-			payable.total =  newValue;
+			payable.total = newValue;
 		}
 
 		return payable;
