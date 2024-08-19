@@ -12,8 +12,8 @@ export class CreatePayableEntity1724019679618 implements MigrationInterface {
 				"discount" decimal NOT NULL,
 				"total" decimal NOT NULL,
 				"due_date" timestamp without time zone NOT NULL,
-				"createdAt" timestamp without time zone NOT NULL,
-				"updatedAt" timestamp without time zone NOT NULL)`;
+				"created_at" timestamp without time zone NOT NULL,
+				"updated_at" timestamp without time zone NOT NULL)`;
 		
 		await queryRunner.query(query);
 	}

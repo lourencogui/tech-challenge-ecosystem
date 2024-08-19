@@ -1,11 +1,17 @@
 import { Controller, Get } from '@nestjs/common';
+import { TransactionsService } from './transactions.service';
+import { Transaction } from './transaction.entity';
 
-@Controller()
+@Controller('transactions')
 export class TransactionsController {
-	constructor() {}
+	constructor(
+		private transactionsService: TransactionsService
+	) {}
 
 	@Get()
-	getTransactions(): string {
-		return 'Transactions';
+	async getTransactions(): Promise<Transaction[] | null> {
+		const transactions = await this.transactionsService.findAll();
+
+		return transactions;
 	}
 }

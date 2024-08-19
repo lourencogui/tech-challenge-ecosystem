@@ -1,9 +1,12 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('transactions')
 export class Transaction {
   @PrimaryGeneratedColumn()
   id: number;
+
+  // @Column()
+  // merchantId: number;
 
   @Column()
   amount: number;
@@ -11,19 +14,25 @@ export class Transaction {
   @Column()
   description: string;
 
-  @Column()
+  @Column({ name: 'payment_method' })
   paymentMethod: string;
 
-  @Column()
-  paymentStatus: string;
+  @Column({ name: 'card_number' })
+  cardNumber: string;
 
-  @Column()
-  paymentDate: Date;
+  @Column({ name: 'card_holder_name' })
+  cardHolderName: string;
 
-  @Column()
+  @Column({ name: 'card_expiration_date' })
+  cardExpirationDate: Date;
+
+  @Column({ name: 'card_cvv' })
+  cardCvv: string;
+
+  @Column({ name: 'created_at' })
   createdAt: Date;
 
-  @Column()
+  @Column({ name: 'updated_at' })
   updatedAt: Date;
 
 //   @Field(() => ISODate)

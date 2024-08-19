@@ -13,8 +13,8 @@ export class CreateTransactionEntity1724018516770 implements MigrationInterface 
 				"card_holder_name" character varying NOT NULL,
 				"card_expiration_date" date NOT NULL,
 				"card_cvv" character varying(3) NOT NULL,
-				"createdAt" timestamp without time zone NOT NULL,
-				"updatedAt" timestamp without time zone NOT NULL)`;
+				"created_at" timestamp without time zone NOT NULL,
+				"updated_at" timestamp without time zone NOT NULL)`;
 		
 		await queryRunner.query(query);
 	}
