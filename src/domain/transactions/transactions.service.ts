@@ -19,8 +19,16 @@ export class TransactionsService {
 	}
 
 	public async create(transaction: Transaction): Promise<Transaction> {
-		const created = await this.transactionsRepository.save(transaction);
+		const payableToCreate = this.generatePayable(transaction);
+		
+		const createPayablePromise = this.payableRepository.save(payableToCreate);
+		const createTransactionPromise = this.transactionsRepository.save(transaction);
 
+		const [createdTransaction, _] = await Promise.all([createTransactionPromise, createPayablePromise]);
+		return createdTransaction;
+	}
+
+	private generatePayable(transaction: Transaction): Payable {
 		const payable = new Payable();
 		payable.merchantId = 1;
 		payable.discount = 5;
@@ -29,8 +37,6 @@ export class TransactionsService {
 		payable.total = payable.subTotal - payable.discount;
 		payable.dueDate = new Date();
 
-		await this.payableRepository.save(payable);
-
-		return created;
+		return payable;
 	}
 }
