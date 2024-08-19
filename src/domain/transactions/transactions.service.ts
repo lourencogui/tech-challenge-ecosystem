@@ -41,7 +41,8 @@ export class TransactionsService {
 			payable.status = 'paid';
 			payable.dueDate = new Date();
 			
-			const discount = (2 * payable.subTotal) / 100;
+			const fee = 2;
+			const discount = (fee * payable.subTotal) / 100;
 			const newValue = payable.subTotal - discount;
 
 			payable.discount = discount;
@@ -54,7 +55,8 @@ export class TransactionsService {
 			payable.dueDate = thirtyDaysAhead;
 			payable.status = 'waiting_funds';
 	
-			const discount = (4 * payable.subTotal) / 100;
+			const fee = 4;
+			const discount = (fee * payable.subTotal) / 100;
 			const newValue = payable.subTotal - discount;
 
 			payable.discount = discount;
