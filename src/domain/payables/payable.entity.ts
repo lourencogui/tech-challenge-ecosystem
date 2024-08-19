@@ -1,17 +1,17 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('payables')
 export class Payable {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  merchant_id: number;
+  @Column({ name: 'merchant_id' })
+  merchantId: number;
 
   @Column()
   status: string;
 
-  @Column()
+  @Column({ name: 'sub_total' })
   subTotal: number;
 
   @Column()
@@ -20,12 +20,12 @@ export class Payable {
   @Column()
   total: number;
 
-  @Column()
+  @Column({ name: 'due_date' })
   dueDate: Date;
 
-  @Column()
+  @Column({ name: 'created_at' })
   createdAt: Date;
 
-  @Column()
+  @Column({ name: 'updated_at' })
   updatedAt: Date;
 }

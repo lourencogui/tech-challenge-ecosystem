@@ -5,8 +5,8 @@ export class Transaction {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // @Column()
-  // merchantId: number;
+  @Column({ name: 'merchant_id'})
+  merchantId: number;
 
   @Column()
   amount: number;
@@ -24,7 +24,7 @@ export class Transaction {
   cardHolderName: string;
 
   @Column({ name: 'card_expiration_date' })
-  cardExpirationDate: Date;
+  cardExpirationDate: string;
 
   @Column({ name: 'card_cvv' })
   cardCvv: string;
