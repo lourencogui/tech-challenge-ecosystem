@@ -42,4 +42,8 @@ export class Transaction {
 //   @Field(() => ISODate)
 //   @Column({ name: 'updated_at', type: 'time without time zone' })
 //   public updatedAt: Date;
+
+  public constructor(partial?: Partial<Transaction>) {
+    Object.assign(this, partial);
+  }
 }
