@@ -18,7 +18,7 @@ export class TransactionsService {
 		return this.transactionsRepository.find();
 	}
 
-	public async create(transaction: Transaction): Promise<Transaction> {
+	async create(transaction: Transaction): Promise<Transaction> {
 		const payableToCreate = this.generatePayable(transaction);
 		
 		const createPayablePromise = this.payableRepository.save(payableToCreate);
@@ -30,12 +30,36 @@ export class TransactionsService {
 
 	private generatePayable(transaction: Transaction): Payable {
 		const payable = new Payable();
-		payable.merchantId = 1;
-		payable.discount = 5;
-		payable.status = 'waiting_funds';
+
 		payable.subTotal = transaction.amount;
-		payable.total = payable.subTotal - payable.discount;
+		payable.merchantId = 1;
 		payable.dueDate = new Date();
+
+		const isDebitTransaction = transaction.paymentMethod === 'debit_card';
+
+		if (isDebitTransaction) {
+			payable.status = 'paid';
+			payable.dueDate = new Date();
+			
+			const discount = (2 * payable.subTotal) / 100;
+			const newValue = payable.subTotal - discount;
+
+			payable.discount = discount;
+			payable.total =  newValue;
+		} else {
+			payable.status = 'waiting_funds';
+
+			const now = new Date();
+			const thirtyDaysAhead = new Date(now.setDate(now.getDate() + 30));
+			payable.dueDate = thirtyDaysAhead;
+			payable.status = 'waiting_funds';
+	
+			const discount = (4 * payable.subTotal) / 100;
+			const newValue = payable.subTotal - discount;
+
+			payable.discount = discount;
+			payable.total =  newValue;
+		}
 
 		return payable;
 	}
