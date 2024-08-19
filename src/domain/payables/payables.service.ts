@@ -14,4 +14,10 @@ export class PayablesService {
 	findAll(): Promise<Payable[]> {
 		return this.payablesRepository.find();
 	}
+
+	sumByMerchantId(merchantId: number): Promise<Payable[]> {
+		return this.payablesRepository.createQueryBuilder('payable')
+			.where('payable.merchantId = :merchantId', { merchantId })
+			.getMany();
+	}
 }
