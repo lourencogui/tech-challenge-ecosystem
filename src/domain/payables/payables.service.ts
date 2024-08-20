@@ -30,7 +30,7 @@ export class PayablesService {
 		const payable = new Payable();
 
 		payable.subTotal = transaction.amount;
-		payable.merchantId = 1;
+		payable.merchantId = transaction.merchantId;
 
 		const isDebitTransaction = transaction.paymentMethod === 'debit_card';
 
