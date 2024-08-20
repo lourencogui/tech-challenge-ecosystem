@@ -33,9 +33,8 @@ Antes de iniciar, certifique-se de ter as seguintes ferramentas instaladas em su
 
 ### Rotas
 
-GET /transactions
-
-POST /transactions/create
+- GET /transactions
+- POST /transactions/create
 ```json
 {
   "amount": 200,
@@ -48,7 +47,6 @@ POST /transactions/create
   "merchantId": 16
 }
 ```
-
-GET /payables/:merchantId?minDate=2024-08-01&maxDate=2024-08-25
+- GET /payables/:merchantId?minDate=2024-08-01&maxDate=2024-08-25
 
 
