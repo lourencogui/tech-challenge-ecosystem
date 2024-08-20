@@ -28,4 +28,8 @@ export class Payable {
 
   @Column({ name: 'updated_at' })
   updatedAt: Date;
+
+  public constructor(partial?: Partial<Payable>) {
+    Object.assign(this, partial);
+  }
 }

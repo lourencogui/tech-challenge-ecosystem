@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Transaction } from './transaction.entity';
 import { Payable } from '../payables/payable.entity';
+import { PayablesService } from '../payables/payables.service';
 
 
 @Injectable()
@@ -12,6 +13,7 @@ export class TransactionsService {
 		private transactionsRepository: Repository<Transaction>,
 		@InjectRepository(Payable)
 		private payableRepository: Repository<Payable>,
+		private payablesService: PayablesService,
 	) { }
 
 	findAll(): Promise<Transaction[]> {
@@ -20,7 +22,7 @@ export class TransactionsService {
 
 	async create(transaction: Transaction): Promise<Transaction> {
 		try {
-			const payableToCreate = this.generatePayable(transaction);
+			const payableToCreate = this.payablesService.generatePayable(transaction);
 
 			const createTransactionPromise = this.transactionsRepository.save(transaction);
 			const createPayablePromise = this.payableRepository.save(payableToCreate);
@@ -30,42 +32,5 @@ export class TransactionsService {
 		} catch (error) {
 			throw new Error('Error creating transaction');
 		}
-	}
-
-	private generatePayable(transaction: Transaction): Payable {
-		const payable = new Payable();
-
-		payable.subTotal = transaction.amount;
-		payable.merchantId = 1;
-
-		const isDebitTransaction = transaction.paymentMethod === 'debit_card';
-
-		if (isDebitTransaction) {
-			payable.status = 'paid';
-			payable.dueDate = new Date();
-
-			const fee = 2;
-			const discount = (fee * payable.subTotal) / 100;
-			const newValue = payable.subTotal - discount;
-
-			payable.discount = discount;
-			payable.total = newValue;
-		} else {
-			payable.status = 'waiting_funds';
-
-			const now = new Date();
-			const thirtyDaysAhead = new Date(now.setDate(now.getDate() + 30));
-			payable.dueDate = thirtyDaysAhead;
-			payable.status = 'waiting_funds';
-
-			const fee = 4;
-			const discount = (fee * payable.subTotal) / 100;
-			const newValue = payable.subTotal - discount;
-
-			payable.discount = discount;
-			payable.total = newValue;
-		}
-
-		return payable;
 	}
 }
