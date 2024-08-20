@@ -21,24 +21,7 @@ export class PayablesController {
 		@Query('minDate') minDate: Date,
 		@Query('maxDate') maxDate: Date,
 	): Promise<object> {
-
-		const payables = await this.payableService.sumByMerchantId(merchantId, minDate, maxDate);
-		const totals = payables.reduce((acc, payable) => {
-			const totalReceived = payable.status === 'paid' ? (payable.total + acc.totalReceived) : acc.totalReceived;
-			const taxes = payable.status === 'paid' ? (payable.discount + acc.taxes) : acc.taxes;
-			const totalToReceive = payable.status === 'waiting_funds' ? (payable.total + acc.totalToReceive) : acc.totalToReceive;
-
-			return {
-				totalReceived,
-				taxes,
-				totalToReceive
-			}
-		}, {
-			totalReceived: 0,
-			taxes: 0,
-			totalToReceive: 0
-		});
-
+		const totals = await this.payableService.sumByMerchantId(merchantId, minDate, maxDate);
 		return totals;
 	}
 
