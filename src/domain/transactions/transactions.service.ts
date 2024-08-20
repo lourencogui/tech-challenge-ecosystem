@@ -37,7 +37,6 @@ export class TransactionsService {
 
 		payable.subTotal = transaction.amount;
 		payable.merchantId = 1;
-		payable.dueDate = new Date();
 
 		const isDebitTransaction = transaction.paymentMethod === 'debit_card';
 
