@@ -11,15 +11,15 @@ Antes de iniciar, certifique-se de ter as seguintes ferramentas instaladas em su
 
 
 ## Setup:
-    - dentro do diretório do projeto, execute o comando: docker compose up -d api
+    - dentro do diretório do projeto, execute o comando: `docker compose up -d api`
     - A api expõe a porta 3000, verifique se deu tudo certo acessando a rota http://localhost:3000 no seu navegador
 
 
 
 ### Comandos úteis:
-    docker compose exec api npm run db:create
-    docker compose exec api npm run db:migrate
-    docker compose exec api npm run db:revert
+    `docker compose exec api npm run db:create`
+    `docker compose exec api npm run db:migrate`
+    `docker compose exec api npm run db:revert`
 
 ### TODO
   - Utilizar a transaction do postgres durante o fluxo de criação de transações e recebíveis
